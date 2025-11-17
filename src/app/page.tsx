@@ -8,7 +8,7 @@ import { MedicationSchedule } from "@/components/medcare/medication-schedule";
 import { SymptomChecker } from "@/components/medcare/symptom-checker";
 import { DoctorPortal } from "@/components/medcare/doctor-portal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, CalendarClock, Stethoscope, BriefcaseMedical } from "lucide-react";
+import { User, CalendarClock, Stethoscope, BriefcaseMedical, ArrowLeft } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -41,6 +41,13 @@ export default function Home() {
   return (
     <main className="flex min-h-screen w-full flex-col items-center bg-background p-4 sm:p-8 font-body">
       <div className="w-full max-w-4xl mx-auto flex flex-col gap-6">
+        <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold font-headline">Patient Dashboard</h1>
+            <Button variant="outline" onClick={() => setView('qr')}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Scan
+            </Button>
+        </div>
         <Tabs defaultValue="profile" className="w-full">
           <TabsList className="grid w-full grid-cols-4 h-auto">
             <TabsTrigger value="profile" className="flex flex-col h-auto gap-1 py-2">
