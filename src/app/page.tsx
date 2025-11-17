@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -10,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User, CalendarClock, Stethoscope, Briefcase } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DoctorPortal } from "@/components/medcare/doctor-portal";
 
 type View = "scanner" | "profile" | "schedule" | "checker" | "doctor";
 
@@ -51,15 +51,7 @@ export default function Home() {
       case "checker":
         return <SymptomChecker />;
       case "doctor":
-        return (
-          <div className="w-full p-1">
-            <Card>
-              <CardContent className="p-6">
-                <p>Doctor's Dashboard - Coming Soon!</p>
-              </CardContent>
-            </Card>
-          </div>
-        );
+        return <DoctorPortal />;
       default:
         return <QrScanner onScanSuccess={() => setActiveView("profile")} />;
     }
