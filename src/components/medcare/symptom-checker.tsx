@@ -12,11 +12,11 @@ import * as z from "zod";
 import { analyzeSymptomsAction } from "@/app/actions";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import type { AnalyzeSymptomsOutput } from "@/ai/flows/analyze-symptoms";
+import type { AnalyzeSymptomsOutput } from "@/app/actions";
 import { Badge } from "../ui/badge";
 
 const symptomSchema = z.object({
-  symptoms: z.string().min(10, { message: "Please describe your symptoms in at least 10 characters." }),
+  symptoms: z.string().min(3, { message: "Please describe your symptoms in more detail." }),
 });
 
 const medicationScheduleText = "Your morning medication is one 10mg Lisinopril tablet and one 500mg Metformin tablet. Your afternoon medication is one 81mg Aspirin tablet. Your night medication is one 20mg Atorvastatin capsule. Please consult your doctor for any changes.";
@@ -129,12 +129,12 @@ export function SymptomChecker() {
               <div className="mt-4 p-4 bg-secondary rounded-lg">
                 <h4 className="font-semibold mb-2 flex items-center gap-2">
                   <AlertCircle className="h-5 w-5 text-primary" />
-                  Possible Conditions
+                  Suggestions & Possible Conditions
                 </h4>
                 <p className="text-xs text-muted-foreground mb-3">This is not a medical diagnosis. Please consult a healthcare professional.</p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-col gap-2">
                   {analysisResult.possibleConditions.map((condition, index) => (
-                    <Badge key={index} variant="outline" className="text-sm bg-background">
+                    <Badge key={index} variant="outline" className="text-sm bg-background whitespace-normal text-left h-auto py-2 leading-snug">
                       {condition}
                     </Badge>
                   ))}
