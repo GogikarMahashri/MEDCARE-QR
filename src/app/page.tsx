@@ -6,8 +6,6 @@ import { QrScanner } from "@/components/medcare/qr-scanner";
 import { PatientProfile } from "@/components/medcare/patient-profile";
 import { MedicationSchedule } from "@/components/medcare/medication-schedule";
 import { SymptomChecker } from "@/components/medcare/symptom-checker";
-import { DoctorPortal } from "@/components/medcare/doctor-portal";
-import { Separator } from "@/components/ui/separator";
 
 export default function Home() {
   const [isProfileVisible, setProfileVisible] = useState(false);
@@ -26,14 +24,7 @@ export default function Home() {
         {isProfileVisible ? (
           renderPatientView()
         ) : (
-          <>
-            <QrScanner onScanSuccess={() => setProfileVisible(true)} />
-            <div className="relative flex justify-center">
-                <Separator className="absolute top-1/2 w-full" />
-                <span className="relative bg-background px-4 text-sm text-muted-foreground z-10">OR</span>
-            </div>
-            <DoctorPortal />
-          </>
+          <QrScanner onScanSuccess={() => setProfileVisible(true)} />
         )}
       </div>
     </main>
