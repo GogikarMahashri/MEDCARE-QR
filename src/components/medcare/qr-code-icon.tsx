@@ -7,6 +7,7 @@ export const QrCodeWithAnimation = () => {
   const [scanned, setScanned] = useState(false);
 
   useEffect(() => {
+    // This effect now only controls the CSS animation, not the slide navigation.
     const interval = setInterval(() => {
       setScanned(true);
       setTimeout(() => setScanned(false), 1000);
