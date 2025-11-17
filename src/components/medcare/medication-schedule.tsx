@@ -64,7 +64,7 @@ const ScheduleSection = ({ icon: Icon, title, children }: { icon: React.ElementT
 );
 
 
-export function MedicationScheduleSlide() {
+export function MedicationSchedule() {
   return (
     <div className="w-full p-1">
       <Card className="w-full">

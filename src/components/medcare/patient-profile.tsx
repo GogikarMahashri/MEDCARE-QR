@@ -32,7 +32,7 @@ const InfoItem = ({ icon: Icon, label, value, isEditing, onChange, name }: { ico
   </div>
 );
 
-export function PatientProfileSlide() {
+export function PatientProfile() {
   const [isEditing, setIsEditing] = useState(false);
   const [patientData, setPatientData] = useState({
     name: "Jane Doe",

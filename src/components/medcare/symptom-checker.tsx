@@ -26,7 +26,7 @@ const medicationSchedules: Record<string, string> = {
   "te-IN": "మీ ఉదయం మందులు ఒక 10mg లిసినోప్రిల్ టాబ్లెట్ మరియు ఒక 500mg మెట్‌ఫార్మిన్ టాబ్లెట్. మీ మధ్యాహ్నం మందు ఒక 81mg ఆస్పిరిన్ టాబ్లెట్. మీ రాత్రి మందు ఒక 20mg అటోర్వాస్టాటిన్ క్యాప్సూల్. ఏవైనా మార్పుల కోసం దయచేసి మీ వైద్యుడిని సంప్రదించండి."
 }
 
-export function SymptomCheckerSlide() {
+export function SymptomChecker() {
   const [isLoading, setIsLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalyzeSymptomsOutput | null>(null);
   const [selectedLang, setSelectedLang] = useState("en-US");
