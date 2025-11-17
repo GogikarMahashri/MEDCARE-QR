@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Bell, Zap, Vibrate, Sunrise, Sun, Moon, Pill } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 const TrianglePill = () => (
     <svg width="16" height="16" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="text-primary-foreground/70">
@@ -72,6 +73,7 @@ export function MedicationSchedule() {
     flash: false,
     vibrate: true,
   });
+  const [isFlashing, setIsFlashing] = useState(false);
   const { toast } = useToast();
 
   const playSound = () => {
@@ -81,6 +83,13 @@ export function MedicationSchedule() {
     } catch(e) {
       console.error("Could not play sound", e)
     }
+  };
+
+  const triggerFlash = () => {
+    setIsFlashing(true);
+    setTimeout(() => {
+      setIsFlashing(false);
+    }, 300); // Duration of the flash animation
   };
 
   const handleReminderChange = (type: keyof typeof reminderSettings, checked: boolean) => {
@@ -99,12 +108,16 @@ export function MedicationSchedule() {
           });
         }
       }
+      if (type === 'flash') {
+        triggerFlash();
+      }
     }
   };
 
 
   return (
     <div className="w-full p-1">
+       <div className={cn('screen-flash', { 'active': isFlashing })} />
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="font-headline text-2xl">Today's Medication Schedule</CardTitle>

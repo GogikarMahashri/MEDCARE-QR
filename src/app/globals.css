@@ -94,4 +94,29 @@
   .animate-appear {
     animation: appear 0.5s ease-out forwards;
   }
+
+  @keyframes screen-flash {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.5;
+    }
+  }
+
+  .screen-flash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: white;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 9999;
+  }
+
+  .screen-flash.active {
+      animation: screen-flash 0.3s ease-out;
+  }
 }
