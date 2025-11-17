@@ -2,18 +2,44 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { Bell, Zap, Vibrate, Sunrise, Sun, Moon, Tablet } from "lucide-react";
+import { Bell, Zap, Vibrate, Sunrise, Sun, Moon, Pill } from "lucide-react";
 
-const MedicationItem = ({ name, dosage, shape, colorClass }: { name: string, dosage: string, shape: 'pill' | 'capsule' | 'round', colorClass: string }) => {
+const TrianglePill = () => (
+    <svg width="16" height="16" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="text-primary-foreground/70">
+        <path d="M50 15 L95 85 L5 85 Z" />
+    </svg>
+);
+
+
+const MedicationItem = ({ name, dosage, shape, colorClass }: { name: string, dosage: string, shape: 'oval' | 'circle' | 'triangle', colorClass: string }) => {
+  const getShapeStyles = () => {
+    switch(shape) {
+      case 'oval':
+        return { borderRadius: '50px' };
+      case 'circle':
+        return { borderRadius: '9999px' };
+      case 'triangle':
+        return { borderRadius: '4px', clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)', width: '28px', height: '28px', paddingTop: '4px' };
+      default:
+        return {};
+    }
+  }
+
+  const renderIcon = () => {
+    if (shape === 'triangle') {
+        return <TrianglePill />;
+    }
+    return <Pill className="w-4 h-4 text-primary-foreground/70" />;
+  }
+
   return (
     <div className="flex items-center justify-between p-2 rounded-lg hover:bg-secondary/50">
       <div className="flex items-center gap-3">
-        <Badge className={`w-10 h-6 ${colorClass} flex items-center justify-center border-2 border-primary-foreground/20`}
-          style={{ 
-            borderRadius: shape === 'round' ? '9999px' : shape === 'capsule' ? '12px' : '6px',
-          }}
+        <Badge 
+          className={`w-10 h-10 ${colorClass} flex items-center justify-center border-2 border-primary-foreground/20`}
+          style={getShapeStyles()}
         >
-          <Tablet className="w-4 h-4 text-primary-foreground/70" />
+          {renderIcon()}
         </Badge>
         <div>
           <p className="font-medium">{name}</p>
@@ -72,14 +98,14 @@ export function MedicationScheduleSlide() {
 
           <div className="grid md:grid-cols-3 gap-6">
             <ScheduleSection icon={Sunrise} title="Morning">
-              <MedicationItem name="Lisinopril" dosage="10mg" shape="round" colorClass="bg-blue-300" />
-              <MedicationItem name="Metformin" dosage="500mg" shape="pill" colorClass="bg-red-300" />
+              <MedicationItem name="Lisinopril" dosage="10mg" shape="oval" colorClass="bg-blue-300" />
+              <MedicationItem name="Metformin" dosage="500mg" shape="oval" colorClass="bg-red-300" />
             </ScheduleSection>
             <ScheduleSection icon={Sun} title="Afternoon">
-              <MedicationItem name="Aspirin" dosage="81mg" shape="round" colorClass="bg-yellow-300" />
+              <MedicationItem name="Aspirin" dosage="81mg" shape="circle" colorClass="bg-yellow-300" />
             </ScheduleSection>
             <ScheduleSection icon={Moon} title="Night">
-              <MedicationItem name="Atorvastatin" dosage="20mg" shape="capsule" colorClass="bg-purple-300" />
+              <MedicationItem name="Atorvastatin" dosage="20mg" shape="triangle" colorClass="bg-purple-300" />
             </ScheduleSection>
           </div>
         </CardContent>
