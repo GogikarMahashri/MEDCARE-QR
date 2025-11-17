@@ -76,8 +76,6 @@ export function MedicationSchedule() {
 
   const playSound = () => {
     try {
-      // Use a silent audio file and rely on vibration API for haptics.
-      // A more robust solution could use a proper sound file.
       const audio = new Audio("data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGlicmFzaW9uIST+BwARUAAAAgAAAAA=");
       audio.play().catch(e => console.error("Audio play failed:", e));
     } catch(e) {
@@ -89,7 +87,7 @@ export function MedicationSchedule() {
     setReminderSettings(prev => ({ ...prev, [type]: checked }));
     
     if (checked) {
-      if (type === 'sound' || type === 'vibrate') {
+      if (type === 'sound') {
         playSound();
       }
       if (type === 'vibrate') {
