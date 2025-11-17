@@ -1,15 +1,17 @@
+
 "use client";
 
 import { useState } from "react";
 import { PatientProfile } from "@/components/medcare/patient-profile";
 import { MedicationSchedule } from "@/components/medcare/medication-schedule";
 import { SymptomChecker } from "@/components/medcare/symptom-checker";
+import { QrScanner } from "@/components/medcare/qr-scanner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User, CalendarClock, Stethoscope, Briefcase } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type View = "profile" | "schedule" | "checker" | "doctor";
+type View = "scanner" | "profile" | "schedule" | "checker" | "doctor";
 
 const NavButton = ({
   active,
@@ -36,10 +38,12 @@ const NavButton = ({
 );
 
 export default function Home() {
-  const [activeView, setActiveView] = useState<View>("profile");
+  const [activeView, setActiveView] = useState<View>("scanner");
 
   const renderContent = () => {
     switch (activeView) {
+      case "scanner":
+        return <QrScanner onScanSuccess={() => setActiveView("profile")} />;
       case "profile":
         return <PatientProfile />;
       case "schedule":
@@ -57,43 +61,45 @@ export default function Home() {
           </div>
         );
       default:
-        return <PatientProfile />;
+        return <QrScanner onScanSuccess={() => setActiveView("profile")} />;
     }
   };
 
   return (
     <main className="flex min-h-screen w-full flex-col items-center bg-background p-4 sm:p-8 font-body">
       <div className="w-full max-w-4xl mx-auto flex flex-col gap-4">
-        <Card>
-          <CardContent className="p-2">
-            <div className="flex justify-around items-center">
-              <NavButton
-                active={activeView === "profile"}
-                onClick={() => setActiveView("profile")}
-                icon={User}
-                label="Profile"
-              />
-              <NavButton
-                active={activeView === "schedule"}
-                onClick={() => setActiveView("schedule")}
-                icon={CalendarClock}
-                label="Schedule"
-              />
-              <NavButton
-                active={activeView === "checker"}
-                onClick={() => setActiveView("checker")}
-                icon={Stethoscope}
-                label="Checker"
-              />
-              <NavButton
-                active={activeView === "doctor"}
-                onClick={() => setActiveView("doctor")}
-                icon={Briefcase}
-                label="Doctor"
-              />
-            </div>
-          </CardContent>
-        </Card>
+        {activeView !== "scanner" && (
+          <Card>
+            <CardContent className="p-2">
+              <div className="flex justify-around items-center">
+                <NavButton
+                  active={activeView === "profile"}
+                  onClick={() => setActiveView("profile")}
+                  icon={User}
+                  label="Profile"
+                />
+                <NavButton
+                  active={activeView === "schedule"}
+                  onClick={() => setActiveView("schedule")}
+                  icon={CalendarClock}
+                  label="Schedule"
+                />
+                <NavButton
+                  active={activeView === "checker"}
+                  onClick={() => setActiveView("checker")}
+                  icon={Stethoscope}
+                  label="Checker"
+                />
+                <NavButton
+                  active={activeView === "doctor"}
+                  onClick={() => setActiveView("doctor")}
+                  icon={Briefcase}
+                  label="Doctor"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
         
         {renderContent()}
       </div>
