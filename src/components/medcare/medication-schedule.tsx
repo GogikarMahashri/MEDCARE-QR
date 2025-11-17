@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { Bell, Zap, Vibrate, Sunrise, Sun, Moon, Pill } from "lucide-react";
+import { Bell, Zap, Vibrate, Sunrise, Sun, Moon, Pill, Square } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -16,7 +16,7 @@ const TrianglePill = () => (
     </svg>
 );
 
-const MedicationItem = ({ name, dosage, shape, colorClass }: { name: string, dosage: string, shape: 'oval' | 'circle' | 'triangle', colorClass: string }) => {
+const MedicationItem = ({ name, dosage, shape, colorClass }: { name: string, dosage: string, shape: 'oval' | 'circle' | 'triangle' | 'square', colorClass: string }) => {
   const getShapeStyles = () => {
     switch(shape) {
       case 'oval':
@@ -25,6 +25,8 @@ const MedicationItem = ({ name, dosage, shape, colorClass }: { name: string, dos
         return { borderRadius: '9999px' };
       case 'triangle':
         return { borderRadius: '4px', clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)', width: '28px', height: '28px', paddingTop: '4px' };
+      case 'square':
+        return { borderRadius: '4px' };
       default:
         return {};
     }
@@ -33,6 +35,9 @@ const MedicationItem = ({ name, dosage, shape, colorClass }: { name: string, dos
   const renderIcon = () => {
     if (shape === 'triangle') {
         return <TrianglePill />;
+    }
+    if (shape === 'square') {
+        return <Square className="w-4 h-4 text-primary-foreground/70" />;
     }
     return <Pill className="w-4 h-4 text-primary-foreground/70" />;
   }
@@ -165,7 +170,7 @@ export function MedicationSchedule() {
               <MedicationItem name="Metformin" dosage="500mg" shape="oval" colorClass="bg-red-300" />
             </ScheduleSection>
             <ScheduleSection icon={Sun} title="Afternoon">
-              <MedicationItem name="Aspirin" dosage="81mg" shape="circle" colorClass="bg-yellow-300" />
+              <MedicationItem name="Aspirin" dosage="81mg" shape="square" colorClass="bg-yellow-300" />
             </ScheduleSection>
             <ScheduleSection icon={Moon} title="Night">
               <MedicationItem name="Atorvastatin" dosage="20mg" shape="triangle" colorClass="bg-purple-300" />
