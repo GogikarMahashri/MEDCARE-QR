@@ -9,6 +9,8 @@ import { SymptomChecker } from "@/components/medcare/symptom-checker";
 import { DoctorPortal } from "@/components/medcare/doctor-portal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User, CalendarClock, Stethoscope, BriefcaseMedical } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const [view, setView] = useState("qr"); // 'qr' or 'patient'
@@ -18,7 +20,19 @@ export default function Home() {
       <main className="flex min-h-screen w-full flex-col items-center bg-background p-4 sm:p-8 font-body">
         <div className="w-full max-w-4xl mx-auto flex flex-col gap-6">
           <QrScanner onScanSuccess={() => setView("patient")} />
-          <DoctorPortal />
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="w-full py-6 text-lg">
+                <BriefcaseMedical className="mr-2" /> Physician Portal
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="font-headline text-2xl">Physician Portal</DialogTitle>
+              </DialogHeader>
+              <DoctorPortal />
+            </DialogContent>
+          </Dialog>
         </div>
       </main>
     );
