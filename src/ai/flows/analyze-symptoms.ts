@@ -18,7 +18,7 @@ const AnalyzeSymptomsOutputSchema = z.object({
   possibleConditions: z
     .array(z.string())
     .describe(
-      'A list of possible medical conditions that could be causing the symptoms.  This list is not exhaustive and is intended to provide possible causes for the patient to consider with their healthcare provider.'
+      'A list of possible medical conditions that could be causing the symptoms. This list is not exhaustive and is intended to provide possible causes for the patient to consider with their healthcare provider.'
     ),
 });
 export type AnalyzeSymptomsOutput = z.infer<typeof AnalyzeSymptomsOutputSchema>;
@@ -37,7 +37,7 @@ Symptoms: {{{$input}}}
 
 This list is not exhaustive and is intended to provide possible causes for the patient to consider with their healthcare provider.
 
-Format your response as a JSON object with a single field called "possibleConditions", which is a JSON array of strings.  Each string should be a possible medical condition.  Do not include any explanation or introductory text in your response, only the JSON object.
+Format your response as a JSON object with a single field called "possibleConditions", which is a JSON array of strings. Each string should be a possible medical condition. Do not include any explanation or introductory text in your response, only the JSON object.
 `,
 });
 
