@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -6,10 +7,6 @@ import { PatientProfile } from "@/components/medcare/patient-profile";
 import { MedicationSchedule } from "@/components/medcare/medication-schedule";
 import { SymptomChecker } from "@/components/medcare/symptom-checker";
 import { DoctorPortal } from "@/components/medcare/doctor-portal";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { User, CalendarClock, Stethoscope, Briefcase } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
 export default function Home() {
