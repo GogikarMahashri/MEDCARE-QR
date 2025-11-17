@@ -63,8 +63,8 @@ export function DoctorPortal() {
   return (
     <div className="w-full p-1">
       <Card className="w-full">
-        <Accordion type="single" collapsible>
-          <AccordionItem value="doctor-portal">
+        <Accordion type="single" collapsible defaultValue="doctor-portal">
+          <AccordionItem value="doctor-portal" className="border-b-0">
             <AccordionTrigger className="p-6 hover:no-underline">
               <div className="flex flex-col items-start space-y-1.5">
                 <CardTitle className="font-headline text-2xl">Physician Portal</CardTitle>
