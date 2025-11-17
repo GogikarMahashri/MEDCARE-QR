@@ -14,14 +14,22 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { useToast } from "@/hooks/use-toast";
 import type { AnalyzeSymptomsOutput } from "@/ai/flows/analyze-symptoms";
 import { Badge } from "../ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const symptomSchema = z.object({
   symptoms: z.string().min(10, { message: "Please describe your symptoms in at least 10 characters." }),
 });
 
+const medicationSchedules: Record<string, string> = {
+  "en-US": "Your morning medication is one 10mg Lisinopril tablet and one 500mg Metformin tablet. Your afternoon medication is one 81mg Aspirin tablet. Your night medication is one 20mg Atorvastatin capsule. Please consult your doctor for any changes.",
+  "hi-IN": "आपकी सुबह की दवा एक 10mg लिसिनोप्रिल टैबलेट और एक 500mg मेटफॉर्मिन टैबलेट है। आपकी दोपहर की दवा एक 81mg एस्पिरिन टैबलेट है। आपकी रात की दवा एक 20mg एटोरवास्टेटिन कैप्सूल है। किसी भी बदलाव के लिए कृपया अपने डॉक्टर से सलाह लें।",
+  "te-IN": "మీ ఉదయం మందులు ఒక 10mg లిసినోప్రిల్ టాబ్లెట్ మరియు ఒక 500mg మెట్‌ఫార్మిన్ టాబ్లెట్. మీ మధ్యాహ్నం మందు ఒక 81mg ఆస్పిరిన్ టాబ్లెట్. మీ రాత్రి మందు ఒక 20mg అటోర్వాస్టాటిన్ క్యాప్సూల్. ఏవైనా మార్పుల కోసం దయచేసి మీ వైద్యుడిని సంప్రదించండి."
+}
+
 export function SymptomCheckerSlide() {
   const [isLoading, setIsLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalyzeSymptomsOutput | null>(null);
+  const [selectedLang, setSelectedLang] = useState("en-US");
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof symptomSchema>>({
@@ -33,10 +41,17 @@ export function SymptomCheckerSlide() {
 
   const handleSpeak = () => {
     if (typeof window !== "undefined" && window.speechSynthesis) {
-      const utterance = new SpeechSynthesisUtterance(
-        "Your morning medication is one 10mg Lisinopril tablet and one 500mg Metformin tablet. Your afternoon medication is one 81mg Aspirin tablet. Your night medication is one 20mg Atorvastatin capsule. Please consult your doctor for any changes."
-      );
-      utterance.lang = "en-US";
+      const scheduleText = medicationSchedules[selectedLang];
+      if (!scheduleText) {
+        toast({
+          variant: "destructive",
+          title: "Language Not Supported",
+          description: "The selected language is not available for the voice assistant.",
+        });
+        return;
+      }
+      const utterance = new SpeechSynthesisUtterance(scheduleText);
+      utterance.lang = selectedLang;
       window.speechSynthesis.speak(utterance);
     } else {
       toast({
@@ -59,6 +74,7 @@ export function SymptomCheckerSlide() {
         variant: "destructive",
         title: "Analysis Failed",
         description: errorMessage,
+        duration: 5000,
       });
     } finally {
       setIsLoading(false);
@@ -75,7 +91,19 @@ export function SymptomCheckerSlide() {
         <CardContent className="grid md:grid-cols-2 gap-8">
           {/* Voice Assistant */}
           <div className="flex flex-col gap-4">
-            <h3 className="text-lg font-semibold flex items-center gap-2"><Volume2 className="w-5 h-5 text-primary" /> Voice Assistant</h3>
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold flex items-center gap-2"><Volume2 className="w-5 h-5 text-primary" /> Voice Assistant</h3>
+              <Select value={selectedLang} onValueChange={setSelectedLang}>
+                <SelectTrigger className="w-[120px]">
+                  <SelectValue placeholder="Language" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en-US">English</SelectItem>
+                  <SelectItem value="hi-IN">Hindi</SelectItem>
+                  <SelectItem value="te-IN">Telugu</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <p className="text-sm text-muted-foreground">
               Press the button to hear your medication schedule for today.
             </p>
