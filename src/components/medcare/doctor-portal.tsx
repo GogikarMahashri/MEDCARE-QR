@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -7,19 +8,33 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, QrCode, Trash2 } from "lucide-react";
+import { PlusCircle, QrCode, Trash2, Pill } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 
+type Medication = {
+  name: string;
+  type: string;
+  pillShape: string;
+  dosage: string;
+  frequency: string;
+  imageUrl: string;
+};
+
 export function DoctorPortal() {
-  const [medications, setMedications] = useState([{ name: "", dosage: "" }]);
+  const [medications, setMedications] = useState<Medication[]>([
+    { name: "", type: "Pill", pillShape: "Circle", dosage: "", frequency: "", imageUrl: "" },
+  ]);
   const [qrCode, setQrCode] = useState("");
   const [date, setDate] = useState<Date>();
 
   const addMedication = () => {
-    setMedications([...medications, { name: "", dosage: "" }]);
+    setMedications([
+      ...medications,
+      { name: "", type: "Pill", pillShape: "Circle", dosage: "", frequency: "", imageUrl: "" },
+    ]);
   };
 
   const removeMedication = (index: number) => {
@@ -27,7 +42,11 @@ export function DoctorPortal() {
     setMedications(newMedications);
   };
 
-  const handleMedicationChange = (index: number, field: "name" | "dosage", value: string) => {
+  const handleMedicationChange = (
+    index: number,
+    field: keyof Medication,
+    value: string
+  ) => {
     const newMedications = [...medications];
     newMedications[index][field] = value;
     setMedications(newMedications);
@@ -110,23 +129,83 @@ export function DoctorPortal() {
 
                 <div>
                   <h3 className="text-md font-semibold mb-4 text-primary">Medications</h3>
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {medications.map((med, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <Input 
-                          placeholder="Medication Name" 
-                          value={med.name}
-                          onChange={(e) => handleMedicationChange(index, 'name', e.target.value)}
-                        />
-                        <Input 
-                          placeholder="Dosage (e.g., 500mg)" 
-                          value={med.dosage}
-                          onChange={(e) => handleMedicationChange(index, 'dosage', e.target.value)}
-                        />
-                        <Button type="button" variant="ghost" size="icon" onClick={() => removeMedication(index)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      <Card key={index} className="bg-secondary/50 p-4">
+                        <CardHeader className="flex flex-row items-center justify-between p-0 pb-4">
+                           <CardTitle className="text-lg">Medication #{index + 1}</CardTitle>
+                           <Button type="button" variant="ghost" size="icon" onClick={() => removeMedication(index)}>
+                             <Trash2 className="h-4 w-4" />
+                           </Button>
+                        </CardHeader>
+                        <CardContent className="space-y-4 p-0">
+                          <div className="space-y-2">
+                            <Label>Name</Label>
+                            <Input 
+                              placeholder="e.g., Lisinopril" 
+                              value={med.name}
+                              onChange={(e) => handleMedicationChange(index, 'name', e.target.value)}
+                            />
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label>Type</Label>
+                              <Select value={med.type} onValueChange={(value) => handleMedicationChange(index, 'type', value)}>
+                                <SelectTrigger>
+                                  <div className="flex items-center gap-2">
+                                    <Pill className="h-4 w-4" />
+                                    <SelectValue placeholder="Select type" />
+                                  </div>
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Pill">Pill</SelectItem>
+                                  <SelectItem value="Tablet">Tablet</SelectItem>
+                                  <SelectItem value="Capsule">Capsule</SelectItem>
+                                  <SelectItem value="Syrup">Syrup</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Pill Shape</Label>
+                              <Select value={med.pillShape} onValueChange={(value) => handleMedicationChange(index, 'pillShape', value)}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select shape" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Circle">Circle</SelectItem>
+                                  <SelectItem value="Oval">Oval</SelectItem>
+                                  <SelectItem value="Triangle">Triangle</SelectItem>
+                                  <SelectItem value="Square">Square</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Dosage</Label>
+                            <Input 
+                              placeholder="e.g., 10mg Tablet" 
+                              value={med.dosage}
+                              onChange={(e) => handleMedicationChange(index, 'dosage', e.target.value)}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Frequency & Instructions</Label>
+                             <Input 
+                              placeholder="e.g., Once daily with breakfast" 
+                              value={med.frequency}
+                              onChange={(e) => handleMedicationChange(index, 'frequency', e.target.value)}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Image URL (Optional)</Label>
+                            <Input 
+                              placeholder="https://example.com/image.png" 
+                              value={med.imageUrl}
+                              onChange={(e) => handleMedicationChange(index, 'imageUrl', e.target.value)}
+                            />
+                          </div>
+                        </CardContent>
+                      </Card>
                     ))}
                     <Button type="button" variant="outline" onClick={addMedication} className="w-full">
                       <PlusCircle className="mr-2 h-4 w-4" />
@@ -180,3 +259,5 @@ export function DoctorPortal() {
     </div>
   );
 }
+
+    
