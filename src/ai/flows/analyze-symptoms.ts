@@ -31,11 +31,13 @@ const analyzeSymptomsPrompt = ai.definePrompt({
   name: 'analyzeSymptomsPrompt',
   input: {schema: AnalyzeSymptomsInputSchema},
   output: {schema: AnalyzeSymptomsOutputSchema},
-  prompt: `You are a medical assistant. Given the following description of symptoms, provide a list of possible medical conditions that could be causing the symptoms.
+  prompt: `You are a safe medical-information assistant for a Symptom Checker.
+When the user enters symptoms, respond in the structured format below.
+Do NOT give a diagnosis. Use phrases like ‘possible conditions may include…’.
+Do NOT prescribe restricted medications.
+Use only over-the-counter examples when appropriate (e.g., paracetamol, ibuprofen) and include safety notes.
 
 Symptoms: {{{$input}}}
-
-This list is not exhaustive and is intended to provide possible causes for the patient to consider with their healthcare provider.
 
 Format your response as a JSON object with a single field called "possibleConditions", which is a JSON array of strings. Each string should be a possible medical condition. Do not include any explanation or introductory text in your response, only the JSON object.
 `,
