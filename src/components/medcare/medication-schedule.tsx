@@ -1,15 +1,19 @@
+
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Bell, Zap, Vibrate, Sunrise, Sun, Moon, Pill } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const TrianglePill = () => (
     <svg width="16" height="16" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="text-primary-foreground/70">
         <path d="M50 15 L95 85 L5 85 Z" />
     </svg>
 );
-
 
 const MedicationItem = ({ name, dosage, shape, colorClass }: { name: string, dosage: string, shape: 'oval' | 'circle' | 'triangle', colorClass: string }) => {
   const getShapeStyles = () => {
@@ -50,7 +54,6 @@ const MedicationItem = ({ name, dosage, shape, colorClass }: { name: string, dos
   )
 }
 
-
 const ScheduleSection = ({ icon: Icon, title, children }: { icon: React.ElementType, title: string, children: React.ReactNode }) => (
   <div>
     <div className="flex items-center gap-2 mb-2">
@@ -63,8 +66,45 @@ const ScheduleSection = ({ icon: Icon, title, children }: { icon: React.ElementT
   </div>
 );
 
-
 export function MedicationSchedule() {
+  const [reminderSettings, setReminderSettings] = useState({
+    sound: true,
+    flash: false,
+    vibrate: true,
+  });
+  const { toast } = useToast();
+
+  const playSound = () => {
+    try {
+      // Use a silent audio file and rely on vibration API for haptics.
+      // A more robust solution could use a proper sound file.
+      const audio = new Audio("data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGlicmFzaW9uIST+BwARUAAAAgAAAAA=");
+      audio.play().catch(e => console.error("Audio play failed:", e));
+    } catch(e) {
+      console.error("Could not play sound", e)
+    }
+  };
+
+  const handleReminderChange = (type: keyof typeof reminderSettings, checked: boolean) => {
+    setReminderSettings(prev => ({ ...prev, [type]: checked }));
+    
+    if (checked) {
+      if (type === 'sound' || type === 'vibrate') {
+        playSound();
+      }
+      if (type === 'vibrate') {
+        if ('vibrate' in navigator) {
+          navigator.vibrate(200); // Vibrate for 200ms
+        } else {
+          toast({
+            description: "Vibration is not supported on this device.",
+          });
+        }
+      }
+    }
+  };
+
+
   return (
     <div className="w-full p-1">
       <Card className="w-full">
@@ -79,17 +119,29 @@ export function MedicationSchedule() {
               <div className="flex items-center gap-2">
                 <Bell className="w-5 h-5" />
                 <span className="text-sm">Sound</span>
-                <Switch id="sound-reminder" defaultChecked />
+                <Switch 
+                  id="sound-reminder" 
+                  checked={reminderSettings.sound}
+                  onCheckedChange={(checked) => handleReminderChange('sound', checked)}
+                />
               </div>
               <div className="flex items-center gap-2">
                 <Zap className="w-5 h-5" />
                 <span className="text-sm">Flash</span>
-                <Switch id="flash-reminder" />
+                <Switch 
+                  id="flash-reminder" 
+                  checked={reminderSettings.flash}
+                  onCheckedChange={(checked) => handleReminderChange('flash', checked)}
+                />
               </div>
               <div className="flex items-center gap-2">
                 <Vibrate className="w-5 h-5" />
                 <span className="text-sm">Vibrate</span>
-                <Switch id="vibrate-reminder" defaultChecked />
+                <Switch 
+                  id="vibrate-reminder" 
+                  checked={reminderSettings.vibrate}
+                  onCheckedChange={(checked) => handleReminderChange('vibrate', checked)}
+                />
               </div>
             </div>
           </div>
