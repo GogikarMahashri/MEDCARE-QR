@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { User, Cake, VenetianMask, Droplets, HeartPulse, ClipboardList, Phone, Mail, Stethoscope, Hospital, CalendarDays, Edit, Save, Upload } from "lucide-react";
+import { User, Cake, VenetianMask, Droplets, HeartPulse, ClipboardList, Phone, Mail, Stethoscope, Hospital, CalendarDays, Edit, Save, Upload, Link } from "lucide-react";
 import { useState, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -141,6 +141,17 @@ export function PatientProfile() {
               <InfoItem icon={CalendarDays} label="Next Consultation" value={patientData.nextConsultation} isEditing={isEditing} onChange={handleInputChange} name="nextConsultation" />
             </div>
           </div>
+
+          <Separator />
+
+          <div>
+            <h3 className="text-sm font-semibold mb-4 text-primary flex items-center"><Link className="mr-2 h-4 w-4"/>Linked Devices</h3>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-6">
+              <InfoItem icon={Phone} label="Primary Phone" value={patientData.contactNumber} isEditing={isEditing} onChange={handleInputChange} name="contactNumber" />
+              <InfoItem icon={Mail} label="Primary Email" value={patientData.email} isEditing={isEditing} onChange={handleInputChange} name="email" />
+            </div>
+          </div>
+
         </CardContent>
       </Card>
     </div>
