@@ -5,10 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { Bell, Zap, Vibrate, Sunrise, Sun, Moon, Pill, Square } from "lucide-react";
+import { Bell, Zap, Vibrate, Sunrise, Sun, Moon, Pill, Square, BellRing } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { Label } from "../ui/label";
 
 const TrianglePill = () => (
     <svg width="16" height="16" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="text-primary-foreground/70">
@@ -79,6 +80,7 @@ export function MedicationSchedule() {
     vibrate: true,
   });
   const [isFlashing, setIsFlashing] = useState(false);
+  const [customerCareReminder, setCustomerCareReminder] = useState(false);
   const { toast } = useToast();
 
   const playSound = () => {
@@ -131,32 +133,51 @@ export function MedicationSchedule() {
         <CardContent className="grid gap-6">
           <div>
             <h3 className="text-sm font-semibold mb-3 text-primary">Reminder Settings</h3>
-            <div className="flex items-center justify-around p-3 rounded-lg bg-secondary">
-              <div className="flex items-center gap-2">
-                <Bell className="w-5 h-5" />
-                <span className="text-sm">Sound</span>
-                <Switch 
-                  id="sound-reminder" 
-                  checked={reminderSettings.sound}
-                  onCheckedChange={(checked) => handleReminderChange('sound', checked)}
-                />
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-around p-3 rounded-lg bg-secondary">
+                <div className="flex items-center gap-2">
+                  <Bell className="w-5 h-5" />
+                  <span className="text-sm">Sound</span>
+                  <Switch 
+                    id="sound-reminder" 
+                    checked={reminderSettings.sound}
+                    onCheckedChange={(checked) => handleReminderChange('sound', checked)}
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Zap className="w-5 h-5" />
+                  <span className="text-sm">Flash</span>
+                  <Switch 
+                    id="flash-reminder" 
+                    checked={reminderSettings.flash}
+                    onCheckedChange={(checked) => handleReminderChange('flash', checked)}
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Vibrate className="w-5 h-5" />
+                  <span className="text-sm">Vibrate</span>
+                  <Switch 
+                    id="vibrate-reminder" 
+                    checked={reminderSettings.vibrate}
+                    onCheckedChange={(checked) => handleReminderChange('vibrate', checked)}
+                  />
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5" />
-                <span className="text-sm">Flash</span>
-                <Switch 
-                  id="flash-reminder" 
-                  checked={reminderSettings.flash}
-                  onCheckedChange={(checked) => handleReminderChange('flash', checked)}
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <Vibrate className="w-5 h-5" />
-                <span className="text-sm">Vibrate</span>
-                <Switch 
-                  id="vibrate-reminder" 
-                  checked={reminderSettings.vibrate}
-                  onCheckedChange={(checked) => handleReminderChange('vibrate', checked)}
+
+              <div className="flex items-center justify-between rounded-lg border p-3">
+                <div className="flex items-center space-x-2">
+                  <BellRing className="h-5 w-5 text-primary"/>
+                  <div>
+                    <Label htmlFor="call-reminder">Customer Care Reminders</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Enable automated reminder calls.
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  id="call-reminder"
+                  checked={customerCareReminder}
+                  onCheckedChange={setCustomerCareReminder}
                 />
               </div>
             </div>
