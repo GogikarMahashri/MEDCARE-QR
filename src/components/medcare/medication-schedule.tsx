@@ -5,12 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { Bell, Zap, Vibrate, Sunrise, Sun, Moon, Pill, Square, BellRing, Phone } from "lucide-react";
+import { Bell, Zap, Vibrate, Sunrise, Sun, Moon, Pill, Square, BellRing, Phone, Check } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import { Checkbox } from "../ui/checkbox";
 
 const TrianglePill = () => (
     <svg width="16" height="16" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="text-primary-foreground/70">
@@ -18,7 +19,7 @@ const TrianglePill = () => (
     </svg>
 );
 
-const MedicationItem = ({ name, dosage, shape, colorClass }: { name: string, dosage: string, shape: 'oval' | 'circle' | 'triangle' | 'square', colorClass: string }) => {
+const MedicationItem = ({ id, name, dosage, shape, colorClass, taken, onToggle }: { id: string, name: string, dosage: string, shape: 'oval' | 'circle' | 'triangle' | 'square', colorClass: string, taken: boolean, onToggle: (id: string) => void }) => {
   const getShapeStyles = () => {
     switch(shape) {
       case 'oval':
@@ -54,10 +55,16 @@ const MedicationItem = ({ name, dosage, shape, colorClass }: { name: string, dos
           {renderIcon()}
         </Badge>
         <div>
-          <p className="font-medium">{name}</p>
-          <p className="text-xs text-muted-foreground">{dosage}</p>
+          <p className={cn("font-medium", { "line-through text-muted-foreground": taken })}>{name}</p>
+          <p className={cn("text-xs text-muted-foreground", { "line-through": taken })}>{dosage}</p>
         </div>
       </div>
+      <Checkbox
+        id={`med-${id}`}
+        checked={taken}
+        onCheckedChange={() => onToggle(id)}
+        className="w-5 h-5"
+      />
     </div>
   )
 }
@@ -74,6 +81,28 @@ const ScheduleSection = ({ icon: Icon, title, children }: { icon: React.ElementT
   </div>
 );
 
+type Medication = {
+    id: string;
+    name: string;
+    dosage: string;
+    shape: 'oval' | 'circle' | 'triangle' | 'square';
+    colorClass: string;
+    taken: boolean;
+};
+
+const initialMedications = {
+    morning: [
+        { id: 'lisinopril', name: "Lisinopril", dosage: "10mg", shape: "oval", colorClass: "bg-blue-300", taken: false },
+        { id: 'metformin', name: "Metformin", dosage: "500mg", shape: "oval", colorClass: "bg-red-300", taken: false },
+    ],
+    afternoon: [
+        { id: 'aspirin', name: "Aspirin", dosage: "81mg", shape: "square", colorClass: "bg-yellow-300", taken: false },
+    ],
+    night: [
+        { id: 'atorvastatin', name: "Atorvastatin", dosage: "20mg", shape: "triangle", colorClass: "bg-purple-300", taken: false },
+    ]
+};
+
 export function MedicationSchedule() {
   const [reminderSettings, setReminderSettings] = useState({
     sound: true,
@@ -82,7 +111,27 @@ export function MedicationSchedule() {
   });
   const [isFlashing, setIsFlashing] = useState(false);
   const [customerCareReminder, setCustomerCareReminder] = useState(false);
+  const [medications, setMedications] = useState(initialMedications);
+
   const { toast } = useToast();
+
+  const handleToggleMedication = (id: string) => {
+    const newMedications = { ...medications };
+    for (const time of Object.keys(newMedications) as Array<keyof typeof newMedications>) {
+        const medIndex = newMedications[time].findIndex(m => m.id === id);
+        if (medIndex !== -1) {
+            const med = newMedications[time][medIndex];
+            newMedications[time][medIndex] = { ...med, taken: !med.taken };
+            if (!med.taken) {
+                 toast({
+                    description: `${med.name} marked as taken.`,
+                 });
+            }
+            break;
+        }
+    }
+    setMedications(newMedications);
+  };
 
   const playSound = () => {
     try {
@@ -205,14 +254,19 @@ export function MedicationSchedule() {
 
           <div className="grid md:grid-cols-3 gap-6">
             <ScheduleSection icon={Sunrise} title="Morning">
-              <MedicationItem name="Lisinopril" dosage="10mg" shape="oval" colorClass="bg-blue-300" />
-              <MedicationItem name="Metformin" dosage="500mg" shape="oval" colorClass="bg-red-300" />
+              {medications.morning.map(med => (
+                  <MedicationItem key={med.id} {...med} onToggle={handleToggleMedication} />
+              ))}
             </ScheduleSection>
             <ScheduleSection icon={Sun} title="Afternoon">
-              <MedicationItem name="Aspirin" dosage="81mg" shape="square" colorClass="bg-yellow-300" />
+              {medications.afternoon.map(med => (
+                  <MedicationItem key={med.id} {...med} onToggle={handleToggleMedication} />
+              ))}
             </ScheduleSection>
             <ScheduleSection icon={Moon} title="Night">
-              <MedicationItem name="Atorvastatin" dosage="20mg" shape="triangle" colorClass="bg-purple-300" />
+              {medications.night.map(med => (
+                  <MedicationItem key={med.id} {...med} onToggle={handleToggleMedication} />
+              ))}
             </ScheduleSection>
           </div>
         </CardContent>
@@ -220,3 +274,5 @@ export function MedicationSchedule() {
     </div>
   );
 }
+
+    
