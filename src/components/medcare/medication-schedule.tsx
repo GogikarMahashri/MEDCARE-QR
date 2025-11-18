@@ -5,11 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { Bell, Zap, Vibrate, Sunrise, Sun, Moon, Pill, Square, BellRing } from "lucide-react";
+import { Bell, Zap, Vibrate, Sunrise, Sun, Moon, Pill, Square, BellRing, Phone } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Label } from "../ui/label";
+import { Input } from "../ui/input";
 
 const TrianglePill = () => (
     <svg width="16" height="16" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="text-primary-foreground/70">
@@ -179,6 +180,23 @@ export function MedicationSchedule() {
                   checked={customerCareReminder}
                   onCheckedChange={setCustomerCareReminder}
                 />
+              </div>
+
+               <div className="rounded-lg border p-3">
+                <h3 className="text-sm font-semibold mb-3 text-primary">Support</h3>
+                <div className="space-y-2">
+                  <Label htmlFor="customer-care">Customer Care No.</Label>
+                  <div className="relative flex items-center">
+                    <Phone className="absolute left-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="customer-care"
+                      type="tel"
+                      readOnly
+                      value="+1 800 123 4567"
+                      className="pl-10 bg-secondary"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
