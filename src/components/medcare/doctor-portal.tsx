@@ -7,12 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, QrCode, Trash2, Pill } from "lucide-react";
+import { PlusCircle, QrCode, Trash2, Pill, Phone, BellRing } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { SecurityVerification } from "./security-verification";
+import { Switch } from "../ui/switch";
 
 type Medication = {
   name: string;
@@ -30,6 +31,9 @@ export function DoctorPortal() {
   ]);
   const [qrCode, setQrCode] = useState("");
   const [date, setDate] = useState<Date>();
+  const [customerCareNumber, setCustomerCareNumber] = useState('');
+  const [callReminder, setCallReminder] = useState(false);
+
 
   const addMedication = () => {
     setMedications([
@@ -215,29 +219,66 @@ export function DoctorPortal() {
             </div>
 
             <div>
-              <h3 className="text-md font-semibold mb-4 text-primary">Next Consultation Date</h3>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !date && "text-muted-foreground"
-                    )}
-                  >
-                    {date ? format(date, "PPP") : <span>Pick a date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    initialFocus
+              <h3 className="text-md font-semibold mb-4 text-primary">Next Consultation & Reminders</h3>
+              <div className="space-y-4">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      {date ? format(date, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                 <div className="flex items-center justify-between rounded-lg border p-3">
+                  <div className="flex items-center space-x-2">
+                    <BellRing className="h-5 w-5 text-primary"/>
+                    <div>
+                      <Label htmlFor="call-reminder">Customer Care Reminders</Label>
+                      <p className="text-xs text-muted-foreground">
+                        Enable automated reminder calls for the patient.
+                      </p>
+                    </div>
+                  </div>
+                  <Switch
+                    id="call-reminder"
+                    checked={callReminder}
+                    onCheckedChange={setCallReminder}
                   />
-                </PopoverContent>
-              </Popover>
+                </div>
+              </div>
             </div>
+            
+            <div>
+              <h3 className="text-md font-semibold mb-4 text-primary">Support</h3>
+              <div className="space-y-2">
+                <Label htmlFor="customer-care">Customer Care No.</Label>
+                <div className="relative flex items-center">
+                  <Phone className="absolute left-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="customer-care"
+                    type="tel"
+                    placeholder="e.g., +1 800 123 4567"
+                    value={customerCareNumber}
+                    onChange={(e) => setCustomerCareNumber(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+            </div>
+
           </CardContent>
         </Card>
         
