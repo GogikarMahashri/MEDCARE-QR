@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -13,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { SecurityVerification } from "./security-verification";
 
 type Medication = {
   name: string;
@@ -24,6 +24,7 @@ type Medication = {
 };
 
 export function DoctorPortal() {
+  const [isVerified, setIsVerified] = useState(false);
   const [medications, setMedications] = useState<Medication[]>([
     { name: "", type: "Pill", pillShape: "Circle", dosage: "", frequency: "", imageUrl: "" },
   ]);
@@ -58,6 +59,10 @@ export function DoctorPortal() {
     // For this prototype, we'll just display a placeholder.
     setQrCode("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PatientData");
   };
+
+  if (!isVerified) {
+    return <SecurityVerification onVerified={() => setIsVerified(true)} />;
+  }
 
   return (
     <div className="w-full">
